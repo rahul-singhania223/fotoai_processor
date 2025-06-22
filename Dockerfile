@@ -8,12 +8,11 @@ COPY requirements.txt requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY recommendation_objects recommendation_objects
-COPY agents agents
-COPY agent_controller.py agent_controller.py
+COPY config config
+COPY lib lib
+COPY models models
+
 COPY main.py main.py
 
-# # remove this
-# COPY test_input.json test_input.json
 
 ENTRYPOINT [ "python", "main.py" ]
