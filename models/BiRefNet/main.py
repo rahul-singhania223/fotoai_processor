@@ -1,18 +1,20 @@
-from transformers import AutoModelForImageSegmentation
-from torchvision import transforms
-from PIL import Image
 import torch
-from lib.utils import upload_to_supabase
-
 import requests
 from io import BytesIO
+from PIL import Image
+from torchvision import transforms
+
+from models.BiRefNet.models.birefnet import BiRefNet
+from lib.utils import upload_to_supabase
+
+birefnet = BiRefNet.from_pretrained('ZhengPeng7/BiRefNet')
 
 
-class BiRefNet:
+class BiRefNetModel:
     def __init__(self):
-        self.birefnet = AutoModelForImageSegmentation.from_pretrained('ZhengPeng7/BiRefNet', trust_remote_code=True)
+        self.birefnet = BiRefNet.from_pretrained('ZhengPeng7/BiRefNet')
         torch.set_float32_matmul_precision(['high', 'highest'][0])
-        self.birefnet.to('cuda')
+        # self.birefnet.to('cuda')
         self.birefnet.eval()
         self.birefnet.half()
 
@@ -24,8 +26,8 @@ class BiRefNet:
             image.verify()
         except Exception as downloadErr:
             print(f"Something is wrong with the URL: {str(downloadErr)}")
-            return { "status": "FAILED", "message": "Invalid URL"}
-        
+            return {"status": "FAILED", "error_code": "INVALID_PARAMETERS"}
+
         # Data settings
         image_size = (1024, 1024)
         transform_image = transforms.Compose([
@@ -35,42 +37,32 @@ class BiRefNet:
         ])
 
         image = Image.open(BytesIO(res.content))
-        input_images = transform_image(image).unsqueeze(0).to('cuda').half()
+        # input_images = transform_image(image).unsqueeze(0).to('cuda').half()
 
-        # Prediction
-        with torch.no_grad():
-            preds = self.birefnet(input_images)[-1].sigmoid().cpu()
-        pred = preds[0].squeeze()
-        pred_pil = transforms.ToPILImage()(pred)
-        mask = pred_pil.resize(image.size)
-        image.putalpha(mask)
+        # # Prediction
+        # with torch.no_grad():
+        #     preds = birefnet(input_images)[-1].sigmoid().cpu()
+        # pred = preds[0].squeeze()
+        # pred_pil = transforms.ToPILImage()(pred)
+        # mask = pred_pil.resize(image.size)
+        # image.putalpha(mask)
 
-        return {"status": "SUCCESS", "image": image}
-    
+        return {"status": "SUCCESS", "result_image": image}
     
     def process(self, image_url):
         extract_response = self.extract_object(image_url)
-
-        if extract_response['status'] == 'FAILED':
+        if extract_response["status"] == "FAILED":
             return extract_response
         
-        image = extract_response['image']
+        image = extract_response['result_image']
 
-        # upload
+        # upload to storage
         with BytesIO() as buffer:
-            image.save(buffer, format='PNG')
-            result_image = buffer.getvalue()
+            image.save(buffer, format="PNG")
+            image_buffer = buffer.getvalue()
 
-        upload_res = upload_to_supabase(result_image)
+        upload_res = upload_to_supabase(image_buffer)
 
-        if upload_res['status'] == 'FAILED':
-            return upload_res
-        
-        result_url = upload_to_supabase['result_url']
+        print("PROCESS_COMPLETED")
 
-        return {"status": "SUCCESS", "result_url": result_url}
-        
-
-
-
-
+        return upload_res

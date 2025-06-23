@@ -1,19 +1,16 @@
-from models.BiRefNet.main import BiRefNet
+from models.BiRefNet.main import BiRefNetModel
 import runpod
 
-agent_dict = {
-    "REMOVE_BG": BiRefNet()
+processor_dict = {
+    "REMOVE_BG": BiRefNetModel()
 }
 
 def process_image(input):
     job_input = input['input']
     image_url = job_input['image_url']
     process_type = job_input['process_type']
-
-    agent = agent_dict[process_type]
-
+    agent = processor_dict[process_type]
     output = agent.process(image_url=image_url)
-
     return output
 
 

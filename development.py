@@ -1,7 +1,7 @@
-from models.BiRefNet.main import BiRefNet
+from models.BiRefNet.main import BiRefNetModel
 
-
-birefnet = BiRefNet()
 
 if __name__ == "__main__":
-    birefnet.process("image_url")
+    processor = BiRefNetModel()
+
+    processor.process("image_url")
