@@ -6,7 +6,8 @@ WORKDIR /app
 
 COPY requirements.txt requirements.txt
 
-RUN pip install --upgrade pip &&  pip install --no-cache-dir -r requirements.txt
+RUN python install --upgrade pip
+RUN pip install -r requirements.txt
 
 COPY config config
 COPY lib lib
