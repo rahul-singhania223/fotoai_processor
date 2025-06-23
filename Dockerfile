@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY requirements.txt requirements.txt
 
-RUN python install --upgrade pip
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY config config
