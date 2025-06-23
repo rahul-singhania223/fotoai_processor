@@ -7,8 +7,6 @@ from torchvision import transforms
 from models.BiRefNet.models.birefnet import BiRefNet
 from lib.utils import upload_to_supabase
 
-birefnet = BiRefNet.from_pretrained('ZhengPeng7/BiRefNet')
-
 
 class BiRefNetModel:
     def __init__(self):
@@ -41,10 +39,11 @@ class BiRefNetModel:
 
         # Prediction
         with torch.no_grad():
-            preds = birefnet(input_images)[-1].sigmoid().cpu()
+            preds = self.birefnet(input_images)[-1].sigmoid().cpu()
         pred = preds[0].squeeze()
         pred_pil = transforms.ToPILImage()(pred)
         mask = pred_pil.resize(image.size)
+
         image.putalpha(mask)
 
         return {"status": "SUCCESS", "result_image": image}
