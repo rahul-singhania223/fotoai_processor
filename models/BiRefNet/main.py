@@ -14,7 +14,7 @@ class BiRefNetModel:
     def __init__(self):
         self.birefnet = BiRefNet.from_pretrained('ZhengPeng7/BiRefNet')
         torch.set_float32_matmul_precision(['high', 'highest'][0])
-        # self.birefnet.to('cuda')
+        self.birefnet.to('cuda')
         self.birefnet.eval()
         self.birefnet.half()
 
@@ -37,15 +37,15 @@ class BiRefNetModel:
         ])
 
         image = Image.open(BytesIO(res.content))
-        # input_images = transform_image(image).unsqueeze(0).to('cuda').half()
+        input_images = transform_image(image).unsqueeze(0).to('cuda').half()
 
-        # # Prediction
-        # with torch.no_grad():
-        #     preds = birefnet(input_images)[-1].sigmoid().cpu()
-        # pred = preds[0].squeeze()
-        # pred_pil = transforms.ToPILImage()(pred)
-        # mask = pred_pil.resize(image.size)
-        # image.putalpha(mask)
+        # Prediction
+        with torch.no_grad():
+            preds = birefnet(input_images)[-1].sigmoid().cpu()
+        pred = preds[0].squeeze()
+        pred_pil = transforms.ToPILImage()(pred)
+        mask = pred_pil.resize(image.size)
+        image.putalpha(mask)
 
         return {"status": "SUCCESS", "result_image": image}
     
