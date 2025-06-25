@@ -1,4 +1,4 @@
-from config.supabase import supabase
+from config.supabase_config import supabase
 
 def upload_to_supabase(file):
     try:
@@ -10,3 +10,5 @@ def upload_to_supabase(file):
     except Exception as uploadErr:
         print(f"Couldn't upload the result image to storage: {str(uploadErr)}")
         return {"status": "FAILED", "error_code": "UPLOAD_ERROR"}
+
+

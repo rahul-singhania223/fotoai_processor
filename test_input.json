@@ -1,0 +1,6 @@
+{
+    "input": {
+        "image_url": "image_url",
+        "process_type": "REMOVE_BG"
+    }
+}
