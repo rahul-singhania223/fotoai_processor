@@ -1,5 +1,6 @@
 import torch
 import requests
+import base64
 from io import BytesIO
 from PIL import Image
 from torchvision import transforms
@@ -16,15 +17,8 @@ class BiRefNetModel:
         self.birefnet.eval()
         self.birefnet.half()
 
-    def extract_object(self, image_url):
-        # download image
-        try:
-            res = requests.get(image_url)
-            image = Image.open(BytesIO(res.content))
-            image.verify()
-        except Exception as downloadErr:
-            print(f"Something is wrong with the URL: {str(downloadErr)}")
-            return {"status": "FAILED", "error_code": "INVALID_PARAMETERS"}
+    def extract_object(self, image_url):        
+        res = requests.get(image_url)
 
         # Data settings
         image_size = (1024, 1024)
@@ -46,22 +40,15 @@ class BiRefNetModel:
 
         image.putalpha(mask)
 
-        return {"status": "SUCCESS", "result_image": image}
+        return image
     
     def process(self, image_url):
-        extract_response = self.extract_object(image_url)
-        if extract_response["status"] == "FAILED":
-            return extract_response
-        
-        image = extract_response['result_image']
+        image = self.extract_object(image_url)
 
-        # upload to storage
-        with BytesIO() as buffer:
-            image.save(buffer, format="PNG")
-            image_buffer = buffer.getvalue()
+        buffer = BytesIO()
+        image.save(buffer, format="PNG")
+        image_buffer = buffer.getvalue()    
 
         upload_res = upload_to_supabase(image_buffer)
-
-        print("PROCESS_COMPLETED")
-
+       
         return upload_res
