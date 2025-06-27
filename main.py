@@ -1,8 +1,12 @@
-from models.BiRefNet.main import BiRefNetModel
 import runpod
 
+from models.BiRefNet.main import BiRefNetModel
+from models.Real_ESRGAN.main import RealESRGANModel
+
 processor_dict = {
-    "REMOVE_BG": BiRefNetModel()
+    "REMOVE_BG": BiRefNetModel(),
+    "UPSCALE_2X": RealESRGANModel(scale=2),
+    "UPSCALE_4X": RealESRGANModel(scale=4),
 }
 
 def process_image(input):

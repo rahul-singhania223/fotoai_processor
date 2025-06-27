@@ -1,8 +1,8 @@
 from config.supabase_config import supabase
 
-def upload_to_supabase(file):
+def upload_to_supabase(file, filename="output.png", format="png"):
     try:
-        upload_res = supabase.storage.from_('uploads').upload("output.png", file, file_options={"content-type": "image/png", "upsert": "true"})
+        upload_res = supabase.storage.from_('uploads').upload(filename, file, file_options={"content-type": f"image/{format}", "upsert": "true"})
 
         public_url = supabase.storage.from_('uploads').get_public_url(upload_res.path)
         
