@@ -42,7 +42,7 @@ class BiRefNetModel:
 
         return image
     
-    def process(self, image_url):
+    def process(self, image_url, settings={}):
         image = self.extract_object(image_url)
 
         buffer = BytesIO()
