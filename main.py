@@ -14,6 +14,7 @@ processor_dict = {
 process_with_settings = ['LIGHT_FIX']
 
 def process_image(input):
+    
     job_input = input['input']
     image_url = job_input['image_url']
     process_type = job_input['process_type']  
@@ -21,6 +22,7 @@ def process_image(input):
     agent = processor_dict[process_type]
     settings = {}
 
+    # process with settings
     if process_type in process_with_settings:
         settings = job_input['settings']  
 

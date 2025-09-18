@@ -40,11 +40,16 @@ class BiRefNetModel:
 
         image.putalpha(mask)
 
-        return image
+        return image, mask
     
     def process(self, image_url, settings={}):
-        image = self.extract_object(image_url)
+        image, mask = self.extract_object(image_url)
 
+        # extract object
+        bbox = mask.getbbox()
+        image = image.crop(bbox)
+        
+        # upload
         buffer = BytesIO()
         image.save(buffer, format="PNG")
         image_buffer = buffer.getvalue()    
