@@ -1,6 +1,5 @@
 import torch
 import requests
-import base64
 from io import BytesIO
 from PIL import Image
 from torchvision import transforms
@@ -30,6 +29,9 @@ class BiRefNetModel:
 
         image = Image.open(BytesIO(res.content))
         input_images = transform_image(image).unsqueeze(0).to('cuda').half()
+
+
+        print("Extracting object...")
 
         # Prediction
         with torch.no_grad():
