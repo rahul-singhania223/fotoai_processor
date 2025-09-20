@@ -1,5 +1,3 @@
-import runpod
-
 from models.BiRefNet.main import BiRefNetModel
 from models.Real_ESRGAN.main import RealESRGANModel
 from models.Zero_DCE.main import DCENetModel
@@ -30,11 +28,5 @@ def process_image(input):
     return output
 
 
-def main():
-    runpod.serverless.start({ "handler": process_image })
-
-    
-if __name__ == "__main__":
-    main()
 
 
