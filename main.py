@@ -1,9 +1,5 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-from models.BiRefNet.main import BiRefNetModel
 from models.Real_ESRGAN.main import RealESRGANModel
+from models.BiRefNet.main import BiRefNetModel
 from models.Zero_DCE.main import DCENetModel
 
 

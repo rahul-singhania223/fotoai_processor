@@ -1,5 +1,3 @@
-import sys
-import os
+from models.Real_ESRGAN.main import RealESRGANModel
 
-print(os.path.dirname(os.path.abspath(__file__)))
-print(sys.path)
+print("Everything works!")

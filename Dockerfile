@@ -31,7 +31,8 @@ COPY config config
 COPY lib lib
 COPY models models
 
-RUN export PYTHONPATH=.
+RUN export PYTHONPATH=/app
+ENV PYTHONPATH=/app
 
 COPY main.py main.py
 
