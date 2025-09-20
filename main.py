@@ -1,13 +1,13 @@
-from models.Real_ESRGAN.main import RealESRGANModel
+# from models.Real_ESRGAN.main import RealESRGANModel
 from models.BiRefNet.main import BiRefNetModel
 from models.Zero_DCE.main import DCENetModel
 
 
 processor_dict = {
     "REMOVE_BG": BiRefNetModel(),
-    "UPSCALE_2X": RealESRGANModel(scale=2),
-    "UPSCALE_4X": RealESRGANModel(scale=4),
-    "LIGHT_FIX": DCENetModel()
+    # "UPSCALE_2X": RealESRGANModel(scale=2),
+    # "UPSCALE_4X": RealESRGANModel(scale=4),
+    # "LIGHT_FIX": DCENetModel()
 }
 
 process_with_settings = ['LIGHT_FIX']
