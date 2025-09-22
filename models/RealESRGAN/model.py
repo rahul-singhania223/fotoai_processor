@@ -3,6 +3,7 @@ import torch
 from torch.nn import functional as F
 from PIL import Image
 import numpy as np
+import gdown
 # from huggingface_hub import hf_hub_url, cached_download
 
 from .rrdbnet_arch import RRDBNet
@@ -35,16 +36,23 @@ class RealESRGAN:
             num_block=23, num_grow_ch=32, scale=scale
         )
         
-    def load_weights(self, model_path, download=True):
-        # if not os.path.exists(model_path) and download:
-        #     assert self.scale in [2,4,8], 'You can download models only with scales: 2, 4, 8'
-        #     config = HF_MODELS[self.scale]
-        #     cache_dir = os.path.dirname(model_path)
-        #     local_filename = os.path.basename(model_path)
-        #     config_file_url = hf_hub_url(repo_id=config['repo_id'], filename=config['filename'])
-        #     cached_download(config_file_url, cache_dir=cache_dir, force_filename=local_filename)
-        #     print('Weights downloaded to:', os.path.join(cache_dir, local_filename))
+        self.weigths = {
+            2: '1RmdSQV8iVMWQHg9dk_WnffhN5XRCo4iE',
+            4: '1n4UdNlDV48aW4T2aPCcaQbQEkZj0_EsU',
+        }
+
+    def load_weights(self, model_path, download=True): 
+        # Download model weights
+        if not os.path.exists(model_path):
+            try:                
+                print("Downloading RealESRGAN weights...")
+                google_drive_url = f'https://drive.google.com/uc?id={self.weigths[self.scale]}'
+                gdown.download(google_drive_url, model_path, quiet=False)      
+
+            except:
+                raise Exception('Unable to download RealESRGAN weights for scale x{}'.format(self.scale)) 
         
+        print("Loading RealESRGAN weights...")
         loadnet = torch.load(model_path)
         if 'params' in loadnet:
             self.model.load_state_dict(loadnet['params'], strict=True)

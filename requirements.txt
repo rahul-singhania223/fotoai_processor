@@ -20,3 +20,4 @@ requests
 python-dotenv
 supabase
 runpod
+gdown
