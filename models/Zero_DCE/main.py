@@ -13,27 +13,27 @@ class DCENetModel:
     def __init__(self):
         # Load model
 
-        model_path = "models/Zero_DCE/weights/model200_dark_faces.pth"
+        model_path = "models/Zero_DCE/weights/Epoch99.pth"
         self.device = "cuda"
 
-        self.model = DCENet()
-        self.model.load_state_dict(torch.load(model_path, map_location=self.device, weights_only=False))
-        self.model.to(self.device).eval()
+        self.model = DCENet().cuda()
+        self.model.load_state_dict(torch.load(model_path))
 
 
     def process(self, image_url, settings={'alpha': 1.0}):
+        os.environ['CUDA_VISIBLE_DEVICES']='0'
         alpha = settings['alpha']
         # load image
         res = requests.get(image_url)
-        image = Image.open(BytesIO(res.content))
-        transform = transforms.Compose([
-            transforms.ToTensor(),  # Converts to [0,1]
-        ])
-        img_tensor = transform(image).unsqueeze(0).to(self.device)  # [1, 3, H, W]
-
+        image = Image.open(BytesIO(res.content)).convert('RGB')
+        image = (np.asarray(image)/255.0)
+        image = torch.from_numpy(image).float()
+        image = image.permute(2,0,1)
+        image = image.cuda().unsqueeze(0)
+       
         # forward pass
         with torch.no_grad():
-            _, enhanced_image, _ = self.model(img_tensor, alpha=alpha)
+            _, enhanced_image, _ = self.model(image, alpha=alpha)
 
         # upload result
         img = enhanced_image.squeeze(0).cpu().detach().numpy().transpose(1, 2, 0)  # [H, W, C]
