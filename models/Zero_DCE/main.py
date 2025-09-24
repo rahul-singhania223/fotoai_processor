@@ -17,7 +17,7 @@ class DCENetModel:
         self.device = "cuda"
 
         self.model = DCENet().cuda()
-        self.model.load_state_dict(torch.load(model_path))
+        self.model.load_state_dict(torch.load(model_path, weights_only=False))
 
 
     def process(self, image_url, settings={'alpha': 1.0}):
@@ -35,13 +35,16 @@ class DCENetModel:
         with torch.no_grad():
             _, enhanced_image, _ = self.model(image, alpha=alpha)
 
-        # upload result
         img = enhanced_image.squeeze(0).cpu().detach().numpy().transpose(1, 2, 0)  # [H, W, C]
         img = np.clip(img * 255.0, 0, 255).astype(np.uint8)
-        image_buffer = Image.fromarray(img)
+        img = Image.fromarray(img)
 
-        upload_res = upload_to_supabase(image_buffer, "light_fix_output.jpeg", format='jpeg')
+        # upload
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        image_buffer = buffer.getvalue()    
 
+        upload_res = upload_to_supabase(image_buffer)
         return upload_res
 
 
