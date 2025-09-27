@@ -21,3 +21,5 @@ python-dotenv
 supabase
 runpod
 gdown
+fastapi
+uvicorn
