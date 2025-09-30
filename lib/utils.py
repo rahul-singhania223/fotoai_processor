@@ -1,10 +1,13 @@
 from config.supabase_config import supabase
+import uuid
 
-def upload_to_supabase(file, filename="output.png", format="png"):
+def upload_to_supabase(file, format="png"):
     try:
-        upload_res = supabase.storage.from_('projects').upload(filename, file, file_options={"content-type": f"image/{format}", "upsert": "true"})
+        unique_id = uuid.uuid4().hex
+        filename = f"result_{unique_id}.{format}"
+        upload_res = supabase.storage.from_('Uploads').upload(filename, file, file_options={"content-type": f"image/{format}", "upsert": "false"})
 
-        public_url = supabase.storage.from_('projects').get_public_url(upload_res.path)
+        public_url = supabase.storage.from_('Uploads').get_public_url(upload_res.path)
         
         return {"status": "SUCCESS", "result_url": public_url, "result_path": upload_res.path }
     except Exception as uploadErr:
