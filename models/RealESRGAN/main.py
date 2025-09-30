@@ -30,7 +30,7 @@ class RealESRGANModel:
         result_image.save(buffer, format=format.upper())
         image_buffer = buffer.getvalue()
 
-        upload_result = upload_to_supabase(image_buffer, f"upscale_output.{format}", format)
+        upload_result = upload_to_supabase(image_buffer, format)
         print("Process complete.")
         return upload_result
 
