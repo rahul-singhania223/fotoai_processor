@@ -13,6 +13,14 @@ class RealESRGANModel:
         self.model = RealESRGAN(device, scale)
         self.model.load_weights(f'models/RealESRGAN/weights/RealESRGAN_x{scale}.pth')
 
+    def process_from_image(self, image):
+        # prediction
+        print("Upscaling image...")
+        result_image = self.model.predict(image)
+        
+        return result_image
+        
+
     def process(self, image_url, settings={}):
         # download image
         print("Downloading image...")
@@ -26,7 +34,6 @@ class RealESRGANModel:
         # upload to storage
         print("Uploading image...")
         buffer = BytesIO()
-        format = res.headers.get('Content-Type').split('/')[-1]
         result_image.save(buffer, format=format.upper())
         image_buffer = buffer.getvalue()
 

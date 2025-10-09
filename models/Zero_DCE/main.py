@@ -19,6 +19,23 @@ class DCENetModel:
         self.model = DCENet().cuda()
         self.model.load_state_dict(torch.load(model_path, weights_only=False))
 
+    def process_from_image(self, image, alpha=1.0):
+        img = (np.asarray(image)/255.0)
+        img = torch.from_numpy(img).float()
+        img = img.permute(2,0,1)
+        img = img.cuda().unsqueeze(0)
+
+        # forward pass
+        with torch.no_grad():
+            _, enhanced_image, _ = self.model(image, alpha=alpha)
+
+        img = enhanced_image.squeeze(0).cpu().detach().numpy().transpose(1, 2, 0)  # [H, W, C]
+        img = np.clip(img * 255.0, 0, 255).astype(np.uint8)
+        img = Image.fromarray(img)
+
+        return img
+
+
 
     def process(self, image_url, settings={'alpha': 1.0}):
         os.environ['CUDA_VISIBLE_DEVICES']='0'

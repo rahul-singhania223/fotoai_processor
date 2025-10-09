@@ -16,6 +16,38 @@ class BiRefNetModel:
         self.birefnet.eval()
         self.birefnet.half()
 
+    def extract_object_from_image(self, image):
+         # Data settings
+        image_size = (1024, 1024)
+        transform_image = transforms.Compose([
+            transforms.Resize(image_size),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ])
+
+        input_images = transform_image(image).unsqueeze(0).to('cuda').half()
+
+        print("Extracting object...")
+
+        # Prediction
+        with torch.no_grad():
+            preds = self.birefnet(input_images)[-1].sigmoid().cpu()
+        pred = preds[0].squeeze()
+        pred_pil = transforms.ToPILImage()(pred)
+        mask = pred_pil.resize(image.size)
+
+        image.putalpha(mask)
+
+        # extract object
+        bbox = mask.getbbox()
+        image = image.crop(bbox)
+
+        print("Extracting object complete.")
+
+        return image      
+
+
+
     def extract_object(self, image_url):        
         res = requests.get(image_url)
 
@@ -45,6 +77,7 @@ class BiRefNetModel:
         return image, mask
     
     def process(self, image_url, settings={}):
+        
         image, mask = self.extract_object(image_url)
 
         # extract object
