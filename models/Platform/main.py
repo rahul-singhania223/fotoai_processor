@@ -26,13 +26,10 @@ class PlatformModel:
 
         # light fix
         obj_light_fixed = self.dce_model.process_from_image(obj_upscaled, alpha=0.5)
-
-        # fix dimension
-        obj_fixed = obj_light_fixed.resize((settings['dimension'], settings['dimension']))
-
+                
         # upload
         buffer = BytesIO()
-        obj_fixed.save(buffer, format=format.upper())
+        obj_light_fixed.save(buffer, format=format.upper())
         obj_buffer = buffer.getvalue()
 
         upload_res = upload_to_supabase(obj_buffer, format)

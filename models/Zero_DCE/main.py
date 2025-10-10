@@ -33,7 +33,7 @@ class DCENetModel:
         img = np.clip(img * 255.0, 0, 255).astype(np.uint8)
         img = Image.fromarray(img)
 
-        return img
+        return img.convert('RGB')
 
 
 
