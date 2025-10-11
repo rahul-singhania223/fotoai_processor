@@ -18,7 +18,7 @@ class RealESRGANModel:
         print("Upscaling image...")
         result_image = self.model.predict(image)
         
-        return result_image.convert('RGB')
+        return result_image
         
 
     def process(self, image_url, settings={}):

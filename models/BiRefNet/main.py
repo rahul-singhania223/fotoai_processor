@@ -44,7 +44,7 @@ class BiRefNetModel:
 
         print("Extracting object complete.")
 
-        return image.convert('RGB')
+        return image
 
 
 
