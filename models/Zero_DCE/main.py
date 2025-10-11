@@ -28,7 +28,7 @@ class DCENetModel:
 
         # forward pass
         with torch.no_grad():
-            _, enhanced_image, _ = self.model(image, alpha=alpha)
+            _, enhanced_image, _ = self.model(img, alpha=alpha)
 
         img = enhanced_image.squeeze(0).cpu().detach().numpy().transpose(1, 2, 0)  # [H, W, C]
         img = np.clip(img * 255.0, 0, 255).astype(np.uint8)

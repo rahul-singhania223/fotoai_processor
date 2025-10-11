@@ -21,12 +21,13 @@ class PlatformModel:
 
         # upspscale <= dimension
         img_upscaled = self.realesrgan_model.process_from_image(image)
-
+        
         # extract object
         obj_img = self.birefnet_model.extract_object_from_image(img_upscaled)
-
+        
         # light fix
         obj_light_fixed = self.dce_model.process_from_image(obj_img, alpha=0.5)
+
                 
         # upload
         buffer = BytesIO()
