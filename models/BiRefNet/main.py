@@ -3,6 +3,7 @@ import requests
 from io import BytesIO
 from PIL import Image
 from torchvision import transforms
+import numpy as np
 
 from models.BiRefNet.models.birefnet import BiRefNet
 from lib.utils import upload_to_supabase
@@ -41,6 +42,10 @@ class BiRefNetModel:
         # extract object
         bbox = mask.getbbox()
         image = image.crop(bbox)
+        image = image.convert('RGBA')
+        data = np.array(image)
+        data[data[:, :, 3] == 0] = (0, 0, 0, 0)
+        image = Image.fromarray(data)
 
         print("Extracting object complete.")
 
@@ -83,6 +88,10 @@ class BiRefNetModel:
         # extract object
         bbox = mask.getbbox()
         image = image.crop(bbox)
+        image = image.convert('RGBA')
+        data = np.array(image)
+        data[data[:, :, 3] == 0] = (0, 0, 0, 0)
+        image = Image.fromarray(data)
         
         # upload
         buffer = BytesIO()

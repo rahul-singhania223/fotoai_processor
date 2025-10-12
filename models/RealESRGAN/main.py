@@ -33,6 +33,7 @@ class RealESRGANModel:
 
         # upload to storage
         print("Uploading image...")
+        format = res.headers.get('Content-Type').split('/')[-1]
         buffer = BytesIO()
         result_image.save(buffer, format=format.upper())
         image_buffer = buffer.getvalue()
