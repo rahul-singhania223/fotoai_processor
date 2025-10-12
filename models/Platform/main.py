@@ -11,7 +11,7 @@ from io import BytesIO
 class PlatformModel:
     def __init__(self):
         self.birefnet_model = BiRefNetModel()
-        self.realesrgan_model = RealESRGANModel(4)
+        self.realesrgan_model = RealESRGANModel(2)
         self.dce_model = DCENetModel()
 
     def process(self, image_url, settings={ 'dimension': 1024, 'format': 'png'}):     
