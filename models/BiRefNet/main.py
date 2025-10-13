@@ -41,11 +41,7 @@ class BiRefNetModel:
 
         # extract object
         bbox = mask.getbbox()
-        image = image.crop(bbox)
-        image = image.convert('RGBA')
-        data = np.array(image)
-        data[data[:, :, 3] == 0] = (0, 0, 0, 0)
-        image = Image.fromarray(data)
+        image = image.crop(bbox)      
 
         print("Extracting object complete.")
 
