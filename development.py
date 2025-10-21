@@ -1,9 +1,14 @@
+def printHII():
+    print("HII")
 
+def printHello():
+    print("Hello")
 
+prcess_dict = {
+    "test": printHII,
+    "test2": printHello
+}
 
-if __name__ == '__main__':
-    settings = {
-        "format": "png"
-    }
-
-    print(settings["format"].upper())
+if __name__ == "__main__":
+    agent = prcess_dict["test"]
+    agent()

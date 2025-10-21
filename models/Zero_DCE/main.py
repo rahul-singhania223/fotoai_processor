@@ -61,7 +61,6 @@ class DCENetModel:
         buffer = BytesIO()
         img.save(buffer, format="PNG")
         image_buffer = buffer.getvalue()    
-        format = res.headers.get('Content-Type').split('/')[-1]
 
 
         upload_res = upload_to_supabase(image_buffer, format)
