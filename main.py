@@ -5,9 +5,14 @@ from models.Platform.main import PlatformModel
 
 import runpod
 
-def remove_bg(image_url, settings=None):
+def extract_object(image_url, settings=None):
     model = BiRefNetModel()
     return model.process(image_url=image_url)
+
+def remove_background(image_url, settings=None):
+    model = BiRefNetModel()
+    return model.remove_background(image_url=image_url)
+
 
 def upscale_2x(image_url, settings=None):
     model = RealESRGANModel(scale=2)
@@ -27,7 +32,8 @@ def platform(image_url, settings=None):
 
 
 agent_dict = {
-    "REMOVE_BG": remove_bg,
+    "REMOVE_BACKGROUND": remove_background,
+    "EXTRACT_OBJECT": extract_object,
     "UPSCALE_2X": upscale_2x,
     "UPSCALE_4X": upscale_4x,
     "LIGHT_FIX": light_fix,
