@@ -61,8 +61,13 @@ class BiRefNetModel:
         ])
 
         image = Image.open(BytesIO(res.content))
-        input_images = transform_image(image).unsqueeze(0).to('cuda').half()
 
+        if image.format == 'PNG':
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            background.paste(image, mask=image.split()[3])  # 3 is the alpha channel
+            image = background
+
+        input_images = transform_image(image).unsqueeze(0).to('cuda').half()
 
         print("Extracting object...")
 
@@ -90,7 +95,7 @@ class BiRefNetModel:
         image_buffer = buffer.getvalue() 
 
         upload_res = upload_to_supabase(image_buffer)
-        
+
         return upload_res
     
     def process(self, image_url, settings=None):
