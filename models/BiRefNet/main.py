@@ -83,6 +83,7 @@ class BiRefNetModel:
         return image, mask
     
     def remove_background(self, image_url):
+        print("Removing background...")
         image, mask = self.extract_object(image_url)
         image = image.convert('RGBA')
         data = np.array(image)
@@ -93,6 +94,8 @@ class BiRefNetModel:
         buffer = BytesIO()
         image.save(buffer, format="PNG")
         image_buffer = buffer.getvalue() 
+        
+        print("Removing background complete.")
 
         upload_res = upload_to_supabase(image_buffer)
 
