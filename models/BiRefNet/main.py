@@ -26,9 +26,12 @@ class BiRefNetModel:
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
-        input_images = transform_image(image).unsqueeze(0).to('cuda').half()
+        if image.mode == 'RGBA':
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            background.paste(image, mask=image.split()[3])  # 3 is the alpha channel
+            image = background
 
-        print("Extracting object...")
+        input_images = transform_image(image).unsqueeze(0).to('cuda').half()
 
         # Prediction
         with torch.no_grad():
@@ -41,9 +44,7 @@ class BiRefNetModel:
 
         # extract object
         bbox = mask.getbbox()
-        image = image.crop(bbox)      
-
-        print("Extracting object complete.")
+        image = image.crop(bbox)
 
         return image
 
