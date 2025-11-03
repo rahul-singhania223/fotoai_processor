@@ -54,7 +54,7 @@ class PlatformModel:
 
         # Resize
         print("Resizing image...")
-        w, h = settings['dimension'], settings['dimension']
+        w = h = int(settings.get('dimension', 2000))
         imgW = w * 0.85
         imgH = imgW/obj_light_fixed.width * obj_light_fixed.height
 
