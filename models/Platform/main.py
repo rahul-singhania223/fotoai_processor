@@ -68,7 +68,6 @@ class PlatformModel:
           imgW = new_imgH/imgH * imgW
           imgH = new_imgH   
 
-          
         paste_x = (w - int(imgW)) // 2
         paste_y = (h - int(imgH)) // 2
 
